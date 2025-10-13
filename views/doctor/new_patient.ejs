@@ -1,0 +1,44 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-4">
+  <h2>Add New Patient</h2>
+
+  <form method="POST" action="/doctor/patients/new">
+    <div class="mb-3">
+      <label class="form-label">Full Name</label>
+      <input type="text" name="full_name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Username (must be unique)</label>
+      <input type="text" name="username" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Email</label>
+      <input type="text" name="email" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Chief Complaint</label>
+      <input type="text" name="chief_complaint" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Phone</label>
+      <input type="text" name="phone" class="form-control">
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Emergency Contact Name</label>
+      <input type="text" name="emergency_contact_name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Emergency Contact Phone</label>
+      <input type="text" name="emergency_contact_phone" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-success">Create Patient</button>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

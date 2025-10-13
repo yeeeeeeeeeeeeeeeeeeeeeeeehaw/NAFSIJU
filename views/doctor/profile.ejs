@@ -1,0 +1,11 @@
+<%- include('../partials/header') %>
+<div class="container mt-4">
+  <h2>👨‍⚕️ Doctor Profile</h2>
+  <div class="card p-3 shadow-sm">
+    <p><strong>Full Name:</strong> <%= doctor.full_name %></p>
+    <p><strong>Email:</strong> <%= doctor.email %></p>
+    <p><strong>Phone:</strong> <%= doctor.phone %></p>
+  </div>
+  <button type="submit" class="btn btn-primary">Update Profile</button>
+</div>
+<%- include('../partials/footer') %>

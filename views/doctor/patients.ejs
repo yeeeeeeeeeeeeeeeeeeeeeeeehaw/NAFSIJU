@@ -1,0 +1,42 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-4">
+  <h2>Patients</h2>
+
+  <% if (patients.length === 0) { %>
+    <p>No patients assigned yet.</p>
+  <% } else { %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Phone</th>
+          <th>Diagnosis</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% patients.forEach(p => { %>
+          <tr>
+            <td><%= p.id %></td>
+            <!-- Make name clickable to go to patient details -->
+            <td>
+              <a href="/doctor/patients/<%= p.id %>" class="text-decoration-none">
+                <%= p.full_name %>
+              </a>
+            </td>
+            <td><%= p.phone %></td>
+            <td><%= p.diagnosis || "N/A" %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+
+  <!-- Add New Patient Button -->
+  <div class="mt-3">
+    <a href="/doctor/patients/new" class="btn btn-primary">Add New Patient</a>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

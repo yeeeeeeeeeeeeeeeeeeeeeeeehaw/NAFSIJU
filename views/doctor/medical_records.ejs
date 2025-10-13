@@ -1,0 +1,18 @@
+<%- include('../partials/header') %>
+<div class="container mt-4">
+  <h2>📄 Medical Records</h2>
+  <% if (records.length === 0) { %>
+    <p>No records available.</p>
+  <% } else { %>
+    <div class="list-group">
+      <% records.forEach(r => { %>
+        <div class="list-group-item">
+          <h5><%= r.patient_name %> — <%= r.record_date.toDateString() %></h5>
+          <p><strong>Diagnosis:</strong> <%= r.diagnosis || "N/A" %></p>
+          <p><strong>Notes:</strong> <%= r.therapy_notes || "None" %></p>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

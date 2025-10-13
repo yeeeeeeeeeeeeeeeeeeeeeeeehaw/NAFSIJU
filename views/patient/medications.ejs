@@ -1,0 +1,28 @@
+<%- include("../partials/header") %>
+<div class="container mt-4">
+  <h2>💊 Your Medications</h2>
+
+  <% if (medications.length === 0) { %>
+    <p>No medications assigned yet.</p>
+  <% } else { %>
+    <table class="table table-bordered table-striped mt-3">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Dosage</th>
+          <th>Instructions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% medications.forEach(med => { %>
+          <tr>
+            <td><%= med.name %></td>
+            <td><%= med.dosage %></td>
+            <td><%= med.instructions %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+<%- include("../partials/footer") %>

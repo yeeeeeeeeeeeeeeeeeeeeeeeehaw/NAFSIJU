@@ -1,0 +1,22 @@
+<%- include('../partials/header') %>
+<div class="container mt-4">
+  <h2>💊 Medications</h2>
+  <a href="/doctor/medications/new" class="btn btn-success mb-3">➕ Add Medication</a>
+  <% if (medications.length === 0) { %>
+    <p>No medications recorded yet.</p>
+  <% } else { %>
+    <table class="table table-hover">
+      <thead><tr><th>Medication</th><th>Dosage</th><th>Frequency</th></tr></thead>
+      <tbody>
+        <% medications.forEach(m => { %>
+          <tr>
+            <td><%= m.medication_name %></td>
+            <td><%= m.dosage %></td>
+            <td><%= m.frequency || "N/A" %></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  <% } %>
+</div>
+<%- include('../partials/footer') %>

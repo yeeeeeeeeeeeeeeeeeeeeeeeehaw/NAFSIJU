@@ -1,0 +1,84 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-4">
+  <h2>Add Medical Record for <%= patient.full_name %></h2>
+
+  <form method="POST" action="/doctor/patients/<%= patient.id %>/records/new">
+    <!-- Chief Complaint -->
+    <div class="mb-3">
+      <label class="form-label">Chief Complaint</label>
+      <input type="text" name="chief_complaint" class="form-control" required>
+    </div>
+
+    <!-- Diagnosis -->
+    <div class="mb-3">
+      <label class="form-label">Diagnosis</label>
+      <input type="text" name="diagnosis" class="form-control" required>
+    </div>
+
+    <!-- Therapy Notes -->
+    <div class="mb-3">
+      <label class="form-label">Therapy Notes</label>
+      <textarea name="therapy_notes" class="form-control" rows="3" required></textarea>
+    </div>
+
+    <!-- Existing Medications -->
+    <div class="mb-3">
+      <h4>Select Existing Medications</h4>
+      <% if (medications.length === 0) { %>
+        <p>No medications available. Add a new one below.</p>
+      <% } else { %>
+        <% medications.forEach(m => { %>
+          <div class="border rounded p-2 mb-2">
+            <label>
+              <input type="checkbox" name="medication_ids" value="<%= m.id %>">
+              <strong><%= m.name %></strong>
+            </label>
+
+            <input
+              type="text"
+              name="dosage_<%= m.id %>"
+              placeholder="Dosage (e.g., 500mg twice daily)"
+              class="form-control mt-1"
+            >
+
+            <input
+              type="text"
+              name="frequency_<%= m.id %>"
+              placeholder="Frequency (optional)"
+              class="form-control mt-1"
+            >
+          </div>
+        <% }) %>
+      <% } %>
+    </div>
+
+    <!-- New Medication -->
+    <div class="mb-3">
+      <h4>Or Add a New Medication</h4>
+      <input
+        type="text"
+        name="new_medication_name"
+        placeholder="Medication Name"
+        class="form-control mb-2"
+      >
+      <input
+        type="text"
+        name="new_medication_dosage"
+        placeholder="Dosage (e.g., 250mg daily)"
+        class="form-control mb-2"
+      >
+      <input
+        type="text"
+        name="new_medication_frequency"
+        placeholder="Frequency (optional)"
+        class="form-control mb-2"
+      >
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="btn btn-primary">Save Record</button>
+  </form>
+</div>
+
+<%- include('../partials/footer') %>

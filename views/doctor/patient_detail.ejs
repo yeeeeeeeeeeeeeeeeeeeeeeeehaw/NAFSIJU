@@ -1,0 +1,49 @@
+<%- include('../partials/header') %>
+
+<div class="container mt-4">
+  <h2>Patient Details</h2>
+
+  <div class="card p-3 shadow-sm mb-4">
+    <p><strong>Full Name:</strong> <%= patient.full_name %></p>
+    <p><strong>Phone:</strong> <%= patient.phone %></p>
+    <p><strong>Chief Complaint:</strong> <%= patient.chief_complaint || "N/A" %></p>
+    <p><strong>Emergency Contact:</strong> <%= patient.emergency_contact_name %> 
+       (<%= patient.emergency_contact_phone %>)</p>
+  </div>
+
+  <h4>Medical Records</h4>
+
+<% if (medicalRecords.length === 0) { %>
+  <p>No medical records yet.</p>
+<% } else { %>
+  <ul class="list-group mb-4">
+    <% medicalRecords.forEach(record => { %>
+      <li class="list-group-item">
+        <h5>Record #<%= record.record_id %></h5>
+        <p><strong>Chief Complaint:</strong> <%= record.chief_complaint %></p>
+        <p><strong>Diagnosis:</strong> <%= record.diagnosis %></p>
+        <p><strong>Therapy Notes:</strong> <%= record.therapy_notes %></p>
+
+        <% if (record.medications && record.medications.length > 0) { %>
+          <h6>Prescriptions:</h6>
+          <ul>
+            <% record.medications.forEach(med => { %>
+              <li>
+                <strong><%= med.name %></strong>
+                — Dosage: <%= med.dosage %>
+                <% if (med.frequency) { %> | Frequency: <%= med.frequency %> <% } %>
+              </li>
+            <% }) %>
+          </ul>
+        <% } else { %>
+          <p>No prescriptions recorded.</p>
+        <% } %>
+      </li>
+    <% }) %>
+  </ul>
+<% } %>
+
+  <a href="/doctor/patients/<%= patient.id %>/records/new" class="btn btn-success">Add Medical Record</a>
+</div>
+
+<%- include('../partials/footer') %>

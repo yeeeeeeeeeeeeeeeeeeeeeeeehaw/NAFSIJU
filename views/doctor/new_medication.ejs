@@ -1,0 +1,18 @@
+<%- include('../partials/header') %>
+<div class="container mt-4">
+  <h2>➕ New Medication</h2>
+  <form method="POST" action="/doctor/medications/new" class="card p-4 shadow-sm">
+    <label>Patient:</label>
+    <select name="patient_id" class="form-control mb-3">
+      <% patients.forEach(p => { %>
+        <option value="<%= p.id %>"><%= p.full_name %></option>
+      <% }) %>
+    </select>
+    <input type="text" name="medication_name" placeholder="Medication name" class="form-control mb-3" required>
+    <input type="text" name="dosage" placeholder="Dosage (e.g. 500mg)" class="form-control mb-3" required>
+    <input type="text" name="frequency" placeholder="Frequency (e.g. 2x daily)" class="form-control mb-3">
+    <textarea name="instructions" placeholder="Special instructions" class="form-control mb-3"></textarea>
+    <button class="btn btn-primary">Add Medication</button>
+  </form>
+</div>
+<%- include('../partials/footer') %>

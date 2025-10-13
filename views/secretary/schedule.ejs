@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Secretary Dashboard - Schedule</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f9f9f9; }
+    header { background:#4f46e5; color:white; padding:20px; display:flex; justify-content:space-between; }
+    header a { color:white; margin-left:10px; text-decoration:none; }
+    .container { padding:20px; }
+    table { width:100%; border-collapse: collapse; background:white; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+    th, td { padding:12px; border:1px solid #ddd; text-align:left; }
+    th { background:#f0f0ff; }
+    .actions button { margin-right:5px; background:#4f46e5; color:white; border:none; padding:6px 12px; border-radius:5px; cursor:pointer; }
+    .add-appointment { margin-top:15px; padding:10px 20px; background:#4f46e5; color:white; border:none; border-radius:5px; cursor:pointer; }
+  </style>
+</head>
+<body>
+<header>
+  <div>Secretary Dashboard - Schedule</div>
+  <div>
+    <a href="/secretary/schedule">Schedule</a>
+    <a href="/secretary/profile">Profile</a>
+    <a href="/logout">Logout</a>
+  </div>
+</header>
+
+<div class="container">
+  <h2>All Appointments</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Therapist</th>
+        <th>Patient</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% appointments.forEach(appointment => { %>
+        <tr>
+          <td><%= appointment.date %></td>
+          <td><%= appointment.time %></td>
+          <td><%= appointment.therapist_name %></td>
+          <td><%= appointment.patient_name %></td>
+          <td class="actions">
+            <button>Edit</button>
+            <button>Delete</button>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+  <button class="add-appointment" onclick="location.href='/secretary/schedule/new'">+ Schedule Appointment</button>
+</div>
+</body>
+</html>

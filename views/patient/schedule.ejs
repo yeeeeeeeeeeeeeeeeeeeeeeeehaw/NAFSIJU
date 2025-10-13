@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Patient Dashboard - Schedule</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background: #f9f9f9; }
+    header { background:#4f46e5; color:white; padding:20px; display:flex; justify-content:space-between; }
+    header a { color:white; margin-left:10px; text-decoration:none; }
+    .container { padding:20px; }
+    table { width:100%; border-collapse: collapse; background:white; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+    th, td { padding:12px; border:1px solid #ddd; text-align:left; }
+    th { background:#f0f0ff; }
+  </style>
+</head>
+<body>
+<header>
+  <div>Patient Dashboard - Schedule</div>
+  <div>
+    <a href="/patient/schedule">Schedule</a>
+    <a href="/patient/medications">Medications</a>
+    <a href="/patient/profile">Profile</a>
+    <a href="/logout">Logout</a>
+  </div>
+</header>
+
+<div class="container">
+  <h2>Your Appointments</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Therapist</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% appointments.forEach(appointment => { %>
+        <tr>
+          <td><%= appointment.date %></td>
+          <td><%= appointment.time %></td>
+          <td><%= appointment.therapist_name %></td>
+          <td><%= appointment.notes || '-' %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
