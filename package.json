@@ -18,5 +18,10 @@
     "express-session": "^1.18.2",
     "express.js": "^1.0.0",
     "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "eslint": "^9.37.0",
+    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2"
   }
 }
