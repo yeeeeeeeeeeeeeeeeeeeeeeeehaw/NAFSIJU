@@ -137,6 +137,7 @@ app.use('/doctor', doctorRouter);
 app.use('/patient', patientRouter);
 app.use('/secretary', secretaryRouter);
 
-app.listen(PORT, 'localhost', () => {
-  console.log('Server running on http://localhost:${PORT}');
+app.listen(PORT, '192.168.1.20', () => {
+  console.log(`Server running on http://192.168.1.20:${PORT}`);
 });
+
