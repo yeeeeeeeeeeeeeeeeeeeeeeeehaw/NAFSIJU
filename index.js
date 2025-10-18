@@ -26,11 +26,11 @@ app.get('/', (req, res) => {
   res.render('lander');
 });
 app.get('/login', (req, res) => {
-  res.render('debuglogin', { message: 'failed to login' });
+  res.render('debuglogin', { message: '' });
 });
 // Debug login page for testing roles
 app.get('/debug-login', (req, res) => {
-  res.render('debuglogin', { message: 'failed to login' });
+  res.render('debuglogin', { message: '' });
 });
 app.post('/debug-login', async (req, res) => {
   const { username, password } = req.body;
