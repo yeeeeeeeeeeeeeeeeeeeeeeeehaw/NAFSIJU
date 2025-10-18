@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Add New Medication</title>
+  <title>Edit Medication</title>
   <style>
     body { font-family: "Segoe UI", sans-serif; background: #f8f9fa; color: #333; }
     .container { max-width: 600px; margin: 60px auto; background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
@@ -15,21 +15,21 @@
 </head>
 <body>
   <div class="container">
-    <h2>Add New Medication</h2>
-    <form method="POST" action="/doctor/medications/new">
+    <h2>Edit Medication</h2>
+    <form method="POST" action="/doctor/medications/<%= medication.id %>/edit">
       <label>Name</label>
-      <input type="text" name="name" required>
+      <input type="text" name="name" value="<%= medication.name %>" required>
 
       <label>Dosage</label>
-      <input type="text" name="dosage">
+      <input type="text" name="dosage" value="<%= medication.dosage || '' %>">
 
       <label>Frequency</label>
-      <input type="text" name="frequency">
+      <input type="text" name="frequency" value="<%= medication.frequency || '' %>">
 
       <label>Instructions</label>
-      <textarea name="instructions" rows="4"></textarea>
+      <textarea name="instructions" rows="4"><%= medication.instructions || '' %></textarea>
 
-      <button class="btn" type="submit">Add Medication</button>
+      <button class="btn" type="submit">Save Changes</button>
     </form>
   </div>
 </body>

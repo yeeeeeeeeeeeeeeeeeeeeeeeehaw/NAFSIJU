@@ -348,5 +348,229 @@ router.get("/logout", requireDoctor, (req, res) => {
     res.redirect("/");
   });
 });
+// --- 11️⃣ Medications Tab (Shared Medication List) ---
+router.get("/medications", requireDoctor, async (req, res) => {
+  try {
+    const meds = await pool.query(
+      `SELECT id, name, dosage, frequency, instructions
+       FROM medications
+       ORDER BY name ASC`
+    );
+    res.render("doctor/medications", { medications: meds.rows });
+  } catch (err) {
+    console.error("Error fetching medications:", err);
+    res.status(500).send("Error loading medications");
+  }
+});
+
+// --- Add New Medication ---
+router.get("/medications/new", requireDoctor, (req, res) => {
+  res.render("doctor/new_medication");
+});
+
+router.post("/medications/new", requireDoctor, async (req, res) => {
+  try {
+    const { name, dosage, frequency, instructions } = req.body;
+
+    await pool.query(
+      `INSERT INTO medications (name, dosage, frequency, instructions)
+       VALUES ($1, $2, $3, $4)`,
+      [name.trim(), dosage || null, frequency || null, instructions || null]
+    );
+
+    res.redirect("/doctor/medications");
+  } catch (err) {
+    console.error("Error adding medication:", err);
+    res.status(500).send("Failed to add medication");
+  }
+});
+
+// --- Edit Medication ---
+router.get("/medications/:id/edit", requireDoctor, async (req, res) => {
+  try {
+    const medId = req.params.id;
+    const medRes = await pool.query(
+      `SELECT id, name, dosage, frequency, instructions
+       FROM medications
+       WHERE id=$1`,
+      [medId]
+    );
+
+    if (medRes.rows.length === 0)
+      return res.status(404).send("Medication not found");
+
+    res.render("doctor/edit_medication", { medication: medRes.rows[0] });
+  } catch (err) {
+    console.error("Error loading medication edit form:", err);
+    res.status(500).send("Error loading edit form");
+  }
+});
+
+router.post("/medications/:id/edit", requireDoctor, async (req, res) => {
+  try {
+    const medId = req.params.id;
+    const { name, dosage, frequency, instructions } = req.body;
+
+    await pool.query(
+      `UPDATE medications
+       SET name=$1, dosage=$2, frequency=$3, instructions=$4
+       WHERE id=$5`,
+      [name.trim(), dosage || null, frequency || null, instructions || null, medId]
+    );
+
+    res.redirect("/doctor/medications");
+  } catch (err) {
+    console.error("Error updating medication:", err);
+    res.status(500).send("Failed to update medication");
+  }
+});
+// --- Medical Records Tab (Patient List)
+// --- 11️⃣ Medical Records Routes ---
+router.get("/medical-records", requireDoctor, async (req, res) => {
+  // Show list of patients
+  try {
+    const doctorId = await getDoctorId(req.session.user.id);
+
+    // Fetch patients assigned to this doctor
+    const patientsRes = await pool.query(
+      `SELECT p.id, p.full_name,
+              (SELECT COUNT(*) FROM medical_records mr WHERE mr.patient_id = p.id) AS "recordsCount"
+       FROM patients p
+       WHERE p.doctor_id = $1
+       ORDER BY p.full_name ASC`,
+      [doctorId]
+    );
+
+    res.render("doctor/medical_records_list", { patients: patientsRes.rows });
+  } catch (err) {
+    console.error("Error fetching patients for medical records:", err);
+    res.status(500).send("Server error fetching patients");
+  }
+});
+
+// --- View Records of a Patient ---
+router.get("/medical-records/:patientId", requireDoctor, async (req, res) => {
+  try {
+    const doctorId = await getDoctorId(req.session.user.id);
+    const patientId = req.params.patientId;
+
+    // Verify patient belongs to doctor
+    const patientRes = await pool.query(
+      "SELECT id, full_name FROM patients WHERE id=$1 AND doctor_id=$2",
+      [patientId, doctorId]
+    );
+    if (patientRes.rows.length === 0) return res.status(404).send("Patient not found");
+
+    const recordsRes = await pool.query(
+      `SELECT id, record_date, chief_complaint, diagnosis
+       FROM medical_records
+       WHERE patient_id=$1 AND doctor_id=$2
+       ORDER BY record_date DESC`,
+      [patientId, doctorId]
+    );
+
+    res.render("doctor/medical_records_patient", {
+      patient: patientRes.rows[0],
+      medicalRecords: recordsRes.rows,
+    });
+  } catch (err) {
+    console.error("Error fetching patient records:", err);
+    res.status(500).send("Server error fetching records");
+  }
+});
+
+// --- View/Edit a Single Record ---
+router.get("/medical-records/:patientId/:recordId", requireDoctor, async (req, res) => {
+  try {
+    const doctorId = await getDoctorId(req.session.user.id);
+    const { patientId, recordId } = req.params;
+
+    // Verify patient belongs to doctor
+    const patientRes = await pool.query(
+      "SELECT id, full_name FROM patients WHERE id=$1 AND doctor_id=$2",
+      [patientId, doctorId]
+    );
+    if (patientRes.rows.length === 0) return res.status(404).send("Patient not found");
+
+    // Fetch the record
+    const recordRes = await pool.query(
+      "SELECT * FROM medical_records WHERE id=$1 AND doctor_id=$2 AND patient_id=$3",
+      [recordId, doctorId, patientId]
+    );
+    if (recordRes.rows.length === 0) return res.status(404).send("Record not found");
+
+    res.render("doctor/medical_records_edit", {
+      patient: patientRes.rows[0],
+      record: recordRes.rows[0],
+    });
+  } catch (err) {
+    console.error("Error fetching record:", err);
+    res.status(500).send("Server error fetching record");
+  }
+});
+
+// --- Edit Record POST ---
+router.post("/medical-records/:patientId/:recordId/edit", requireDoctor, async (req, res) => {
+  try {
+    const doctorId = await getDoctorId(req.session.user.id);
+    const { patientId, recordId } = req.params;
+    const { record_date, chief_complaint, diagnosis, therapy_notes } = req.body;
+
+    await pool.query(
+      `UPDATE medical_records
+       SET record_date=$1, chief_complaint=$2, diagnosis=$3, therapy_notes=$4
+       WHERE id=$5 AND doctor_id=$6 AND patient_id=$7`,
+      [record_date, chief_complaint, diagnosis, therapy_notes, recordId, doctorId, patientId]
+    );
+
+    res.redirect(`/doctor/medical-records/${patientId}`);
+  } catch (err) {
+    console.error("Error updating record:", err);
+    res.status(500).send("Failed to update record");
+  }
+});
+
+// --- Add New Record Form ---
+router.get("/medical-records/:patientId/new", requireDoctor, async (req, res) => {
+  try {
+    const doctorId = await getDoctorId(req.session.user.id);
+    const patientId = req.params.patientId;
+
+    // Verify patient belongs to doctor
+    const patientRes = await pool.query(
+      "SELECT id, full_name FROM patients WHERE id=$1 AND doctor_id=$2",
+      [patientId, doctorId]
+    );
+    if (patientRes.rows.length === 0) return res.status(404).send("Patient not found");
+
+    res.render("doctor/medical_records_new", { patient: patientRes.rows[0] });
+  } catch (err) {
+    console.error("Error loading new record form:", err);
+    res.status(500).send("Server error loading form");
+  }
+});
+
+// --- Create New Record POST ---
+router.post("/medical-records/:patientId/new", requireDoctor, async (req, res) => {
+  try {
+    const doctorId = await getDoctorId(req.session.user.id);
+    const patientId = req.params.patientId;
+    const { record_date, chief_complaint, diagnosis, therapy_notes } = req.body;
+
+    const newRecordRes = await pool.query(
+      `INSERT INTO medical_records (patient_id, doctor_id, record_date, chief_complaint, diagnosis, therapy_notes)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING id`,
+      [patientId, doctorId, record_date, chief_complaint, diagnosis, therapy_notes]
+    );
+
+    res.redirect(`/doctor/medical-records/${patientId}`);
+  } catch (err) {
+    console.error("Error creating new record:", err);
+    res.status(500).send("Failed to create record");
+  }
+});
+
+
 
 module.exports = router;

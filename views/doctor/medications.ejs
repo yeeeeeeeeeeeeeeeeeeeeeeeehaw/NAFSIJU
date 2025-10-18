@@ -1,22 +1,103 @@
 <%- include('../partials/header') %>
-<div class="container mt-4">
-  <h2>💊 Medications</h2>
-  <a href="/doctor/medications/new" class="btn btn-success mb-3">➕ Add Medication</a>
-  <% if (medications.length === 0) { %>
-    <p>No medications recorded yet.</p>
-  <% } else { %>
-    <table class="table table-hover">
-      <thead><tr><th>Medication</th><th>Dosage</th><th>Frequency</th></tr></thead>
-      <tbody>
-        <% medications.forEach(m => { %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Medications | Doctor Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 50px auto;
+      background: #fff;
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+    .btn {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background-color: #0056b3;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e5e5;
+      text-align: left;
+    }
+    th {
+      background: #f1f3f5;
+    }
+    tr:hover {
+      background: #f9f9f9;
+    }
+    .empty {
+      text-align: center;
+      color: #888;
+      font-style: italic;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="top-bar">
+      <h1>Medications</h1>
+      <a href="/doctor/medications/new" class="btn">+ Add New Medication</a>
+    </div>
+
+    <% if (medications.length > 0) { %>
+      <table>
+        <thead>
           <tr>
-            <td><%= m.medication_name %></td>
-            <td><%= m.dosage %></td>
-            <td><%= m.frequency || "N/A" %></td>
+            <th>Name</th>
+            <th>Dosage</th>
+            <th>Frequency</th>
+            <th>Instructions</th>
+            <th>Actions</th>
           </tr>
-        <% }) %>
-      </tbody>
-    </table>
-  <% } %>
-</div>
+        </thead>
+        <tbody>
+          <% medications.forEach(med => { %>
+            <tr>
+              <td><%= med.name %></td>
+              <td><%= med.dosage || '-' %></td>
+              <td><%= med.frequency || '-' %></td>
+              <td><%= med.instructions || '-' %></td>
+              <td>
+                <a href="/doctor/medications/<%= med.id %>/edit">Edit</a>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } else { %>
+      <p class="empty">No medications found.</p>
+    <% } %>
+  </div>
+</body>
+</html>
+
 <%- include('../partials/footer') %>

@@ -1,0 +1,93 @@
+/* Layout */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: #4f46e5;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+}
+
+.sidebar a {
+  color: white;
+  text-decoration: none;
+  padding: 12px 20px;
+  display: block;
+}
+
+.sidebar a.active, .sidebar a:hover {
+  background: #3730a3;
+}
+
+/* Main content */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background: #f9f9f9;
+}
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background: #f0f0ff;
+}
+
+.add-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Modal (reuse your old modal styles) */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.18);
+  align-items: center; justify-content: center;
+}
+.modal.active { display: flex; }
+.modal-content {
+  background: #fff;
+  padding: 2rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.13);
+  min-width: 320px;
+  max-width: 95vw;
+  position: relative;
+}
+.modal-close { position: absolute; top: 18px; right: 22px; font-size: 1.3rem; color: #888; background: none; border: none; cursor: pointer; }
+.modal-actions { margin-top: 1.2rem; display: flex; gap: 1rem; justify-content: flex-end; }
+.modal-actions button { padding: 7px 18px; border-radius: 6px; border: none; font-weight: 500; cursor: pointer; }
+.modal-actions .confirm { background: #4f46e5; color: #fff; }
+.modal-actions .cancel { background: #eee; color: #333; }
